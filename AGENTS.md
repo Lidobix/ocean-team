@@ -8,25 +8,53 @@ Ce fichier est la source de vérité unique ; les fichiers spécifiques à un ou
 - **Nom** : ocean-team
 - **Organisation** : [ocean-tech-community](https://github.com/ocean-tech-community)
 - **Objectif** : _à compléter — décrire en 2-3 phrases ce que fait le projet et pour qui._
+- **Type** : API backend NestJS.
 
 ## Stack et structure
 
-_À compléter dès que le code arrive._
+- **Framework** : [NestJS](https://docs.nestjs.com) v12, TypeScript en mode `strict`.
+- **Runtime** : Node.js 20 minimum (22 LTS recommandé).
+- **Gestionnaire de paquets** : npm **11 ou plus** (`npm install` plante avec npm 10 ; sinon `npx npm@11 install`).
+- **Tests** : [Vitest](https://vitest.dev) ; e2e avec Supertest.
+- **Lint / format** : [oxlint](https://oxc.rs) (type-aware) et Prettier.
 
-- Langage(s) / framework(s) :
-- Gestionnaire de paquets :
-- Arborescence principale :
+```
+src/
+  main.ts                  # bootstrap : crée l'app, écoute sur PORT (3000 par défaut)
+  app.module.ts            # module racine, importe les autres modules
+  app.controller.ts        # exemple de contrôleur
+  app.service.ts           # exemple de service
+  app.controller.spec.ts   # test unitaire, à côté du code
+test/
+  app.e2e-spec.ts          # tests end-to-end
+```
 
 ## Commandes
 
-_À compléter. Les agents doivent exécuter ces commandes avant de proposer une PR._
+Les agents doivent faire passer `build`, `test`, `test:e2e` et `lint` avant de proposer une PR.
 
 ```bash
-# Installer les dépendances
-# Lancer en local
-# Lancer les tests
-# Lint / format
+npm install            # installer les dépendances (npm >= 11)
+npm run start:dev      # lancer en local avec rechargement
+npm run build          # compiler dans dist/
+npm test               # tests unitaires (Vitest)
+npm run test:e2e       # tests end-to-end
+npm run lint           # oxlint
+npm run format         # Prettier sur src/ et test/
 ```
+
+## NestJS : points d'attention
+
+- **Version récente** : Nest 12 est probablement plus récent que ce que connaît l'agent. Vérifier dans la doc à jour : https://docs.nestjs.com/llms.txt (une page markdown par chapitre).
+- **ESM uniquement** : le projet est en `"type": "module"`.
+  - Les imports relatifs se terminent par `.js` (`import { AppService } from './app.service.js'`).
+  - `__dirname` n'existe pas : utiliser `import.meta.dirname`.
+- **Tests Vitest** : mocks avec `vi.fn()` / `vi.spyOn()`, jamais `jest.fn()`. Modules de test avec `Test.createTestingModule` de `@nestjs/testing`.
+- **Organisation** : une fonctionnalité = un module (`*.module.ts`), avec son contrôleur et son service, importé dans `AppModule`. Utiliser la CLI pour générer : `npx nest g resource <nom>` (ou `module`, `controller`, `service`).
+- **Paquets officiels d'abord** : avant d'ajouter une librairie tierce ou d'écrire la sienne, vérifier s'il existe un paquet `@nestjs/*` (config, base de données, swagger, auth, throttler, schedule, queues…).
+- **Validation** : schémas Zod (ou autre lib Standard Schema) avec `StandardSchemaValidationPipe` et `@Body({ schema })`. `class-validator` reste possible via `ValidationPipe`.
+- **Configuration** : variables d'environnement dans `.env` (ignoré par Git). Documenter toute nouvelle variable dans un `.env.example`.
+- **Télémétrie** : `@nestjs/observe` est branché par défaut dans `app.module.ts` et n'envoie rien tant que `OBSERVE_APP_KEY` n'est pas défini. Ne pas le configurer ni ajouter de clés sans accord de l'équipe.
 
 ## Conventions
 
