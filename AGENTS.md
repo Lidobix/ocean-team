@@ -1,14 +1,8 @@
 # AGENTS.md
 
-Instructions pour les agents de code (Claude Code, Codex, Cursor, Copilot…) qui travaillent sur ce dépôt.
-Ce fichier est la source de vérité unique ; les fichiers spécifiques à un outil (`CLAUDE.md`, etc.) doivent simplement y renvoyer.
-
 ## Projet
 
-- **Nom** : ocean-team
-- **Organisation** : [ocean-tech-community](https://github.com/ocean-tech-community)
-- **Objectif** : _à compléter — décrire en 2-3 phrases ce que fait le projet et pour qui._
-- **Type** : API backend NestJS.
+ocean-team est l'application NestJS qui sert à gérer la communauté Ocean Tech.
 
 ## Stack et structure
 
@@ -43,18 +37,6 @@ npm run lint           # oxlint
 npm run format         # Prettier sur src/ et test/
 ```
 
-## NestJS : points d'attention
-
-- **Version récente** : Nest 12 est probablement plus récent que ce que connaît l'agent. Vérifier dans la doc à jour : https://docs.nestjs.com/llms.txt (une page markdown par chapitre).
-- **ESM uniquement** : le projet est en `"type": "module"`.
-  - Les imports relatifs se terminent par `.js` (`import { AppService } from './app.service.js'`).
-  - `__dirname` n'existe pas : utiliser `import.meta.dirname`.
-- **Tests Vitest** : mocks avec `vi.fn()` / `vi.spyOn()`, jamais `jest.fn()`. Modules de test avec `Test.createTestingModule` de `@nestjs/testing`.
-- **Organisation** : une fonctionnalité = un module (`*.module.ts`), avec son contrôleur et son service, importé dans `AppModule`. Utiliser la CLI pour générer : `npx nest g resource <nom>` (ou `module`, `controller`, `service`).
-- **Paquets officiels d'abord** : avant d'ajouter une librairie tierce ou d'écrire la sienne, vérifier s'il existe un paquet `@nestjs/*` (config, base de données, swagger, auth, throttler, schedule, queues…).
-- **Validation** : schémas Zod (ou autre lib Standard Schema) avec `StandardSchemaValidationPipe` et `@Body({ schema })`. `class-validator` reste possible via `ValidationPipe`.
-- **Configuration** : variables d'environnement dans `.env` (ignoré par Git). Documenter toute nouvelle variable dans un `.env.example`.
-- **Télémétrie** : `@nestjs/observe` est branché par défaut dans `app.module.ts` et n'envoie rien tant que `OBSERVE_APP_KEY` n'est pas défini. Ne pas le configurer ni ajouter de clés sans accord de l'équipe.
 
 ## Conventions
 
