@@ -37,7 +37,6 @@ npm run lint           # oxlint
 npm run format         # Prettier sur src/ et test/
 ```
 
-
 ## Conventions
 
 - **Langue** : documentation, issues et PR en français ; noms de code (variables, fonctions, fichiers) en anglais.
